@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import BlogCard from './components/BlogCard';
-import { IBlog } from '@/models/Blog';
+
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -37,8 +37,8 @@ export default function Home() {
 
         // Extract unique tags
         const tags = new Set<string>();
-        data.data.forEach((blog: IBlog) => {
-          blog.tags.forEach((tag: string) => tags.add(tag));
+        data.data.forEach((blog) => {
+          blog.tags.forEach((tag) => tags.add(tag));
         });
         setAllTags(Array.from(tags));
       }

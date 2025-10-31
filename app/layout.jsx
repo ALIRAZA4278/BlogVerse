@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "BlogVerse - Share Your Stories",
   description: "A modern blogging platform for sharing ideas, stories, and knowledge",
 };
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: any;
 }>) {
   return (
     <html lang="en">
