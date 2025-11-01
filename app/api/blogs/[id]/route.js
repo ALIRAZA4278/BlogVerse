@@ -8,7 +8,12 @@ export async function GET(request, { params }) {
     await dbConnect();
     const { id } = await params;
 
-    const blog = await Blog.findById(id);
+    // Increment view count
+    const blog = await Blog.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
 
     if (!blog) {
       return NextResponse.json(

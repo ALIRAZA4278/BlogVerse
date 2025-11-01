@@ -18,6 +18,19 @@ const CommentSchema = new Schema(
       required: [true, 'Comment content is required'],
       maxlength: [500, 'Comment cannot be more than 500 characters'],
     },
+    userId: {
+      type: String,
+      required: false,
+    },
+    parentId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
+      default: null, // null means it's a top-level comment
+    },
+    likesCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

@@ -1,31 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import BlogCard from './components/BlogCard';
+import SearchBar from './components/SearchBar';
+import DarkModeToggle from './components/DarkModeToggle';
+import NewsletterForm from './components/NewsletterForm';
 
-
-export default function Home() {
+function HomeContent() {
   const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTag, setSelectedTag] = useState('');
-  const [allTags, setAllTags] = useState([]);
 
   useEffect(() => {
     fetchBlogs();
-  }, [searchTerm, selectedTag]);
+  }, [searchParams]);
 
   const fetchBlogs = async () => {
     setLoading(true);
     try {
-      let url = '/api/blogs';
+      const query = searchParams.get('q') || '';
+      const category = searchParams.get('category') || '';
+
+      let url = query || category ? '/api/search' : '/api/blogs';
       const params = new URLSearchParams();
 
-      if (searchTerm) params.append('search', searchTerm);
-      if (selectedTag) params.append('tag', selectedTag);
+      if (query) params.append('q', query);
+      if (category && category !== 'All') params.append('category', category);
 
       if (params.toString()) url += `?${params.toString()}`;
 
@@ -34,23 +38,12 @@ export default function Home() {
 
       if (data.success) {
         setBlogs(data.data);
-
-        // Extract unique tags
-        const tags = new Set();
-        data.data.forEach((blog) => {
-          blog.tags.forEach((tag) => tags.add(tag));
-        });
-        setAllTags(Array.from(tags));
       }
     } catch (error) {
       console.error('Failed to fetch blogs:', error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
   };
 
   return (
@@ -72,6 +65,7 @@ export default function Home() {
             </Link>
 
             <div className="flex items-center gap-4">
+              <DarkModeToggle />
               {status === 'authenticated' && session?.user ? (
                 <>
                   <Link
@@ -79,9 +73,18 @@ export default function Home() {
                     className="text-white hover:text-indigo-100 px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     Dashboard
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="text-white hover:text-indigo-100 px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profile
                   </Link>
 
                   <Link
@@ -139,46 +142,17 @@ export default function Home() {
             <p className="text-gray-600 text-lg">Explore stories, thinking, and expertise from writers on any topic</p>
           </div>
 
-          <form onSubmit={handleSearch} className="mb-6 max-w-3xl mx-auto">
-            <div className="relative">
-              <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search for blogs, topics, or authors..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-400 shadow-sm text-lg transition-all"
-              />
-            </div>
-          </form>
+          <div className="mb-8">
+            <SearchBar
+              initialQuery={searchParams.get('q') || ''}
+            />
+          </div>
 
-          {allTags.length > 0 && (
-            <div className="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
-              <button
-                onClick={() => setSelectedTag('')}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
-                  selectedTag === ''
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border-2 border-gray-200 shadow-sm'
-                }`}
-              >
-                All Topics
-              </button>
-              {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag)}
-                  className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
-                    selectedTag === tag
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 border-2 border-gray-200 shadow-sm'
-                  }`}
-                >
-                  #{tag}
-                </button>
-              ))}
+          {searchParams.get('q') && (
+            <div className="text-center mb-6">
+              <p className="text-gray-600">
+                Found <span className="font-bold text-indigo-600">{blogs.length}</span> results for "{searchParams.get('q')}"
+              </p>
             </div>
           )}
         </div>
@@ -217,20 +191,19 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">BlogVerse</h3>
-              <p className="text-gray-400">Empowering writers and readers to share and discover amazing content.</p>
+              <p className="text-gray-400 mb-4">Empowering writers and readers to share and discover amazing content.</p>
+              <div className="mt-4">
+                <h4 className="font-semibold mb-3 text-lg">Quick Links</h4>
+                <ul className="space-y-2 text-gray-400">
+                  <li><Link href="/" className="hover:text-indigo-400 transition-colors">Home</Link></li>
+                  <li><Link href="/about" className="hover:text-indigo-400 transition-colors">About</Link></li>
+                  <li><Link href="/contact" className="hover:text-indigo-400 transition-colors">Contact</Link></li>
+                  <li><Link href="/blogs/new" className="hover:text-indigo-400 transition-colors">Create Blog</Link></li>
+                </ul>
+              </div>
             </div>
-            <div>
-              <h4 className="font-semibold mb-3 text-lg">Quick Links</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/" className="hover:text-indigo-400 transition-colors">Home</Link></li>
-                <li><Link href="/about" className="hover:text-indigo-400 transition-colors">About</Link></li>
-                <li><Link href="/contact" className="hover:text-indigo-400 transition-colors">Contact</Link></li>
-                <li><Link href="/blogs/new" className="hover:text-indigo-400 transition-colors">Create Blog</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 text-lg">About</h4>
-              <p className="text-gray-400">A modern blogging platform for sharing ideas, stories, and knowledge with the world.</p>
+            <div className="md:col-span-2">
+              <NewsletterForm />
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
@@ -239,5 +212,20 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="text-center py-20">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mb-4"></div>
+          <p className="text-gray-600 text-lg font-medium">Loading...</p>
+        </div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

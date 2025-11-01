@@ -31,6 +31,33 @@ const BlogSchema = new Schema(
       type: String,
       required: false,
     },
+    // New fields for enhanced features
+    status: {
+      type: String,
+      enum: ['draft', 'published'],
+      default: 'published',
+    },
+    category: {
+      type: String,
+      enum: ['Technology', 'Lifestyle', 'Business', 'Health', 'Education', 'Travel', 'Food', 'Other'],
+      default: 'Other',
+    },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    readingTime: {
+      type: Number,
+      default: 0, // in minutes
+    },
+    metaDescription: {
+      type: String,
+      maxlength: [160, 'Meta description cannot be more than 160 characters'],
+    },
+    likesCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

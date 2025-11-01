@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CommentSection from '@/app/components/CommentSection';
+import BlogActions from '@/app/components/BlogActions';
 
 
 export default function BlogPage() {
@@ -130,8 +131,13 @@ export default function BlogPage() {
           )}
 
           <div className="p-8 md:p-12">
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            {/* Category and Tags */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              {blog.category && (
+                <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm px-5 py-2 rounded-lg font-bold shadow-md">
+                  {blog.category}
+                </span>
+              )}
               {blog.tags.map((tag, index) => (
                 <span
                   key={index}
@@ -145,20 +151,49 @@ export default function BlogPage() {
             {/* Title */}
             <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">{blog.title}</h1>
 
-            {/* Author Info */}
-            <div className="flex items-center gap-4 pb-8 mb-8 border-b-2 border-gray-100">
-              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                {blog.author.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <p className="text-xl font-bold text-gray-800">{blog.author}</p>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span className="text-sm">{formatDate(blog.createdAt)}</span>
+            {/* Meta Description */}
+            {blog.metaDescription && (
+              <p className="text-xl text-gray-600 mb-6 leading-relaxed">{blog.metaDescription}</p>
+            )}
+
+            {/* Author Info and Stats */}
+            <div className="pb-8 mb-8 border-b-2 border-gray-100 space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                  {blog.author.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-gray-800">{blog.author}</p>
+                  <div className="flex items-center gap-4 text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-sm">{formatDate(blog.createdAt)}</span>
+                    </div>
+                    {blog.readingTime && (
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-sm">{blog.readingTime} min read</span>
+                      </div>
+                    )}
+                    {blog.views !== undefined && (
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <span className="text-sm">{blog.views} views</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* Like/Bookmark/Share Buttons */}
+              <BlogActions blogId={params.id} blogTitle={blog.title} />
             </div>
 
             {/* Content */}

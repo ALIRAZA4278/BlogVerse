@@ -16,7 +16,8 @@
       "Bash(npm run build:*)",
       "Bash(bash:*)",
       "Bash(findstr:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(mongod:*)"
     ],
     "deny": [],
     "ask": []
