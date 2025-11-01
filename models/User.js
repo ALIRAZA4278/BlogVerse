@@ -31,3 +31,5 @@ const UserSchema = new Schema(
 const User = models.User || model('User', UserSchema);
 
 export default User;
+
+mongodb+srv://aliraza:bloggingapp@blogging.3bmrvcd.mongodb.net/?appName=blogging
