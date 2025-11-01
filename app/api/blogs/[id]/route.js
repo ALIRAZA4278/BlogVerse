@@ -3,10 +3,7 @@ import dbConnect from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 
 // GET a single blog by ID
-export async function GET(
-  request,
-  { params }: { params }
-) {
+export async function GET(request, { params }) {
   try {
     await dbConnect();
     const { id } = await params;
@@ -32,7 +29,7 @@ export async function GET(
 // PUT update a blog by ID
 export async function PUT(
   request,
-  { params }: { params }
+  { params }
 ) {
   try {
     await dbConnect();
@@ -63,7 +60,7 @@ export async function PUT(
 // DELETE a blog by ID
 export async function DELETE(
   request,
-  { params }: { params }
+  { params }
 ) {
   try {
     await dbConnect();

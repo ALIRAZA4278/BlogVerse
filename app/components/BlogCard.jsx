@@ -2,13 +2,8 @@
 
 import Link from 'next/link';
 
-
-// interface BlogCardProps {
-  blog: IBlog;
-// }
-
-export default function BlogCard({ blog }: BlogCardProps) {
-  const formatDate = (date?: Date) => {
+export default function BlogCard({ blog }) {
+  const formatDate = (date) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -75,4 +70,4 @@ export default function BlogCard({ blog }: BlogCardProps) {
       </div>
     </div>
   );
-// }
+}

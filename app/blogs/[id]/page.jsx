@@ -9,7 +9,7 @@ import CommentSection from '@/app/components/CommentSection';
 export default function BlogPage() {
   const params = useParams();
   const router = useRouter();
-  const [blog, setBlog] = useState<IBlog | null>(null);
+  const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function BlogPage() {
     }
   };
 
-  const formatDate = (date?: Date) => {
+  const formatDate = (date) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -172,7 +172,7 @@ export default function BlogPage() {
 
         {/* Comments Section */}
         <div className="mt-12">
-          <CommentSection blogId={params.id as string} />
+          <CommentSection blogId={params.id} />
         </div>
       </main>
 

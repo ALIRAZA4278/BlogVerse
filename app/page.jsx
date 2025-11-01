@@ -8,11 +8,11 @@ import BlogCard from './components/BlogCard';
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const [blogs, setBlogs] = useState<IBlog[]>([]);
+  const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
-  const [allTags, setAllTags] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState([]);
 
   useEffect(() => {
     fetchBlogs();
@@ -36,7 +36,7 @@ export default function Home() {
         setBlogs(data.data);
 
         // Extract unique tags
-        const tags = new Set<string>();
+        const tags = new Set();
         data.data.forEach((blog) => {
           blog.tags.forEach((tag) => tags.add(tag));
         });
@@ -49,7 +49,7 @@ export default function Home() {
     }
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e) => {
     e.preventDefault();
   };
 
@@ -74,6 +74,16 @@ export default function Home() {
             <div className="flex items-center gap-4">
               {status === 'authenticated' && session?.user ? (
                 <>
+                  <Link
+                    href="/dashboard"
+                    className="text-white hover:text-indigo-100 px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Dashboard
+                  </Link>
+
                   <Link
                     href="/blogs/new"
                     className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-semibold hover:bg-indigo-50 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
@@ -213,6 +223,8 @@ export default function Home() {
               <h4 className="font-semibold mb-3 text-lg">Quick Links</h4>
               <ul className="space-y-2 text-gray-400">
                 <li><Link href="/" className="hover:text-indigo-400 transition-colors">Home</Link></li>
+                <li><Link href="/about" className="hover:text-indigo-400 transition-colors">About</Link></li>
+                <li><Link href="/contact" className="hover:text-indigo-400 transition-colors">Contact</Link></li>
                 <li><Link href="/blogs/new" className="hover:text-indigo-400 transition-colors">Create Blog</Link></li>
               </ul>
             </div>

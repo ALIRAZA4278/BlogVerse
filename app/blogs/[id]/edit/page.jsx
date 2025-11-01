@@ -8,7 +8,7 @@ import BlogForm from '@/app/components/BlogForm';
 
 export default function EditBlogPage() {
   const params = useParams();
-  const [blog, setBlog] = useState<IBlog | null>(null);
+  const [blog, setBlog] = useState(null)(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function EditBlogPage() {
             tags: blog.tags,
             imageUrl: blog.imageUrl,
           }}
-          blogId={params.id as string}
+          blogId={params.id}
         />
       </main>
     </div>

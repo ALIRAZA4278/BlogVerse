@@ -2,13 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-
-// interface CommentSectionProps {
-  blogId;
-// }
-
-export default function CommentSection({ blogId }: CommentSectionProps) {
-  const [comments, setComments] = useState<IComment[]>([]);
+export default function CommentSection({ blogId }) {
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState({ author: '', content: '' });
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +23,7 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
     }
   };
 
-  const handleSubmit = async (e
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -50,7 +45,7 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
     }
   };
 
-  const formatDate = (date?: Date) => {
+  const formatDate = (date) => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -142,4 +137,4 @@ export default function CommentSection({ blogId }: CommentSectionProps) {
       </div>
     </div>
   );
-// }
+}

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "./components/SessionProvider";
@@ -18,11 +17,7 @@ export const metadata = {
   description: "A modern blogging platform for sharing ideas, stories, and knowledge",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: any;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body

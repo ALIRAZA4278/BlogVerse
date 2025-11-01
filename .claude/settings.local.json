@@ -13,7 +13,10 @@
       "Bash(done)",
       "Bash(for file in app/auth/*/*.tsx app/blogs/*/*.tsx app/blogs/*/edit/*.tsx)",
       "Bash(do sed 's/: React.FormEvent.*//g; s/: React.ReactNode.*//g; s/interface.*{/\\/\\/ &/g; s/: any//g; s/: string//g; s/: boolean//g; s/import.*IBlog.*//g' \"$file\")",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(bash:*)",
+      "Bash(findstr:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

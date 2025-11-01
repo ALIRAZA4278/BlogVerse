@@ -3,30 +3,19 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-// interface BlogFormProps {
-  initialData?: {
-    title;
-    content;
-    author;
-    tags[];
-    imageUrl?;
-  };
-  blogId?;
-// }
-
-export default function BlogForm({ initialData, blogId }: BlogFormProps) {
+export default function BlogForm({ initialData, blogId }) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: initialData?.title || '',
     content: initialData?.content || '',
     author: initialData?.author || '',
-    tags: initialData?.tags.join(', ') || '',
+    tags: initialData?.tags?.join(', ') || '',
     imageUrl: initialData?.imageUrl || '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -184,4 +173,4 @@ Share your story!"
       </div>
     </form>
   );
-// }
+}
