@@ -12,6 +12,13 @@ export default function BlogCard({ blog }) {
     });
   };
 
+  const stripHtml = (html) => {
+    if (!html) return '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   return (
     <div className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 transform hover:-translate-y-2">
       <div className="relative h-48 overflow-hidden">
@@ -47,7 +54,7 @@ export default function BlogCard({ blog }) {
         </Link>
 
         <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-          {blog.content}
+          {stripHtml(blog.content)}
         </p>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">

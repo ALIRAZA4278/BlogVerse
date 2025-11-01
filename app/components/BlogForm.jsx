@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from './RichTextEditor';
 
 export default function BlogForm({ initialData, blogId }) {
   const router = useRouter();
@@ -117,23 +118,12 @@ export default function BlogForm({ initialData, blogId }) {
           <label htmlFor="content" className="block text-gray-800 font-bold mb-2 text-lg">
             Content
           </label>
-          <textarea
-            id="content"
+          <RichTextEditor
             value={formData.content}
-            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-            rows={15}
-            placeholder="Write your blog content here...
-
-You can format your text using:
-• Line breaks for paragraphs
-• Clear sections for better readability
-• Bullet points like these
-
-Share your story!"
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-400 font-mono text-base leading-relaxed transition-all"
-            required
+            onChange={(html) => setFormData({ ...formData, content: html })}
+            placeholder="Write your blog content here... Use the toolbar to format your text!"
           />
-          <p className="text-sm text-gray-500 mt-2">Write your full blog post content</p>
+          <p className="text-sm text-gray-500 mt-2">Write your full blog post content with rich formatting</p>
         </div>
 
         <div>

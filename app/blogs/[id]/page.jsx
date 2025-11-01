@@ -163,9 +163,10 @@ export default function BlogPage() {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
-              <div className="text-gray-700 whitespace-pre-wrap leading-relaxed text-lg">
-                {blog.content}
-              </div>
+              <div
+                className="text-gray-700 leading-relaxed text-lg"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
             </div>
           </div>
         </article>
